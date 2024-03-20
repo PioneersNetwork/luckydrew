@@ -2,18 +2,22 @@
 import { useState } from "react";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 const AnimatedNumbers = dynamic(() => import("react-animated-numbers"), {
   ssr: false,
 })
 export default function Home() {
   const [rn, setRn] = useState();
   const [winners, setWinners] = useState([]);
+  const [min,setMin]=useState(1);
+  const [max,setMax]=useState(1000);
   const [finish,setFinish]=useState(false);
   const [prizes, setPrizes] = useState([
     10000, 10000, 10000, 10000, 10000, 5000, 5000, 5000, 5000, 5000, 2000, 2000,
-    2000, 2000,
+    2000, 2000,2000, 2000,2000, 2000,2000, 2000,2000, 2000,2000, 2000,2000, 2000,2000, 2000,
   ]);
   function drew() {
+    document.getElementById('theSound').play();
     if(rn)
     {
       setWinners((prev) => {
@@ -55,7 +59,10 @@ export default function Home() {
     return numString;
   }
   return (
-    <div className="w-full bg-white max-h-screen">
+    <div className="w-full bg-white max-h-screen max-w-[1320px] mx-auto">
+<audio id="theSound">
+  <source src="/sound.mp3" />
+ </audio>
       <img
         src="/logo.png"
         className="w-[50%] lg:w-[15%] fixed right-10 top-10"
@@ -83,10 +90,12 @@ export default function Home() {
                   return (
                     <div
                       key={index}
-                      className="flex gap-[32px] mt-[4px] justify-center text-red-500 font-bold"
+                      className="flex gap-[32px] mt-[4px] justify-center items-center text-red-500 font-bold"
                     >
+                      
                       <div className="border-2 w-full p-4">{winner.prize}<small className="text-[10px]">SAR</small></div>
                       <div className="border-2 w-full p-4">{winner.number}</div>
+                      <div className="mx-auto text-[32px] w-[130px]">{index+1}</div>
                     </div>
                   );
                 })}
@@ -176,6 +185,10 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <div className="fixed bottom-3 w-full left-0 text-center" style={{direction:'ltr'}}>
+        <Link className="flex bg-white -z-0 justify-center items-center gap-[16px] border-t pt-2 w-[400px]  mx-auto" href="https://pioneers.network"><div className="text-[12px] drop-shadow">Powered by:</div> <img className="h-[40px] drop-shadow-lg" src="https://sa.pioneers.network/assets/pioneers-logo-135e9c8f.svg" /></Link>
+      </div>
+      
     </div>
   );
 }
