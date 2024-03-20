@@ -236,7 +236,8 @@ export default function Home() {
                         >
                           <div className="border-2 w-full p-4">
                             {winner.prize}
-                            {typeof winner.prize=='number' &&<small className="text-[10px]">SAR</small>}
+                            
+                            { !!parseInt(winner.prize) &&<small className="text-[10px]">SAR</small>}
                           </div>
                           <div className="border-2 w-full p-4">
                             {winner.number}
@@ -265,7 +266,7 @@ export default function Home() {
                       {prizes[winners.length]?.toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                         
-                      {typeof prizes[winners.length]=="number" &&<small className="text-[12px]">SAR</small>}
+                      {!!parseInt(prizes[winners.length]) &&<small className="text-[12px]">SAR</small>}
                     </div>
                     <h3>Prize</h3>
                   </div>
