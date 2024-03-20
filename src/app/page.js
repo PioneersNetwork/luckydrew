@@ -32,7 +32,7 @@ export default function Home() {
         prev.unshift({ number: rn, prize: prizes[prev.length] });
         return [...prev];
       });
-      setRn("0000");
+      
       scrollToRef(winnerDiv)
     }
     let min = 1;
@@ -46,8 +46,9 @@ export default function Home() {
         setFinish(true);
       }
     if (!winners.find((e) => e.number == number) && !finish) {
+      setRn(null);
+      setTimeout(()=>{setRn(number);},200)
       
-      setRn(number);
       
     } else {
       drew();
