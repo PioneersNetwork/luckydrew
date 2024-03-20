@@ -1,8 +1,10 @@
 "use client";
-import Image from "next/image";
 import { useState } from "react";
-import AnimatedNumbers from "react-animated-numbers";
 
+import dynamic from "next/dynamic";
+const AnimatedNumbers = dynamic(() => import("react-animated-numbers"), {
+  ssr: false,
+})
 export default function Home() {
   const [rn, setRn] = useState();
   const [winners, setWinners] = useState([]);
@@ -12,22 +14,27 @@ export default function Home() {
     2000, 2000,
   ]);
   function drew() {
+    if(rn)
+    {
+      setWinners((prev) => {
+        prev.push({ number: rn, prize: prizes[prev.length] });
+        return [...prev];
+      });
+      setRn();
+    }
     let min = 1;
     let max = 1000;
     let number = addLeadingZeros(
       Math.floor(Math.random() * (max - min + 1) + min),
       4
     );
-    if(winners.length>=prizes.length-2)
+    if(winners.length>=prizes.length-1)
       {
         setFinish(true);
       }
     if (!winners.find((e) => e.number == number) && !finish) {
+      
       setRn(number);
-      setWinners((prev) => {
-        prev.push({ number: number, prize: prizes[prev.length] });
-        return [...prev];
-      });
       
     } else {
       drew();
@@ -65,7 +72,7 @@ export default function Home() {
             </h2>
           </div>
           <div className="w-full flex mt-[32px]">
-            {winners?.length != 0 && (
+            {(finish &&winners?.length != 0) && (
               <div className="w-6/12  mx-auto border-x">
                 <div className="flex gap-[32px] justify-center text-red-700 font-bold">
                 <h1>قائمة الفائزين</h1>
@@ -78,7 +85,7 @@ export default function Home() {
                       key={index}
                       className="flex gap-[32px] mt-[4px] justify-center text-red-500 font-bold"
                     >
-                      <div className="border-2 w-full p-4">{winner.prize}</div>
+                      <div className="border-2 w-full p-4">{winner.prize}<small className="text-[10px]">SAR</small></div>
                       <div className="border-2 w-full p-4">{winner.number}</div>
                     </div>
                   );
@@ -87,14 +94,15 @@ export default function Home() {
               </div>
             )}
            {!finish&& <div className="w-full">
-              <div className="text-center w-full flex justify-center  items-start  gap-[32px] text-[28px] text-red-600">
-                <h3>الجائزة الأولى</h3>
-                <h3>1st Prize</h3>
+              <div className="text-center w-full flex justify-center  items-center  gap-[32px] text-[28px] text-red-600">
+                <h3>الجائزة رقم:</h3>
+                <h3 className="border border-red-500 p-2 rounded text-[32px]">{winners?.length+1}</h3>
+                <h3>:# Prize </h3>
               </div>
               <div className="flex gap-[32px] justify-center w-full text-center mt-[64px] text-[24px] items-center">
                 <h3>قيمة الجائزة</h3>
                 <div className="mx-[16px] rounded border-2 border-red-500 px-[16px] text-[32px] text-red-500 font-bold">
-                  10,000 SAR
+                  {prizes[winners.length].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}<small className="text-[12px]">SAR</small>
                 </div>
                 <h3>Prize Value</h3>
               </div>
@@ -105,16 +113,17 @@ export default function Home() {
                   }}
                   className="bg-gray-200 text-black p-[16px] rounded w-[20%]"
                 >
-                  Drew
+                  السحب | Drew
                 </button>
               </div>
               {rn && (
                 <div className="flex gap-[16px] w-full justify-center mt-[32px]">
                   <AnimatedNumbers
-                    includeComma
+                  className="border-2 px-4 rounded mx-1 bg-gradient-radial to-gray-200 from-white to-100%"
+                    
                     transitions={(index) => ({
-                      type: "just",
-                      duration: index + 1,
+                      type:"spring",
+                      duration: index + 10,
                     })}
                     animateToNumber={rn[3]}
                     fontStyle={{
@@ -123,10 +132,11 @@ export default function Home() {
                     }}
                   />
                   <AnimatedNumbers
-                    includeComma
+                  className="border-2 px-4 rounded mx-1 bg-gradient-radial to-gray-200 from-white to-100%"
+                    
                     transitions={(index) => ({
-                      type: "just",
-                      duration: index + 2,
+                      type:"spring",
+                      duration: index + 20,
                     })}
                     animateToNumber={rn[2]}
                     fontStyle={{
@@ -135,10 +145,11 @@ export default function Home() {
                     }}
                   />
                   <AnimatedNumbers
-                    includeComma
+                  className="border-2 px-4 rounded mx-1 bg-gradient-radial to-gray-200 from-white to-100%"
+                    
                     transitions={(index) => ({
-                      type: "just",
-                      duration: index + 3,
+                      type:"spring",
+                      duration: index + 30,
                     })}
                     animateToNumber={rn[1]}
                     fontStyle={{
@@ -147,10 +158,11 @@ export default function Home() {
                     }}
                   />
                   <AnimatedNumbers
-                    includeComma
+                  className="border-2 px-4 rounded mx-1 bg-gradient-radial to-gray-200 from-white to-100%"
+                    
                     transitions={(index) => ({
-                      type: "just",
-                      duration: index + 4,
+                      type:"spring",
+                      duration: index + 40,
                     })}
                     animateToNumber={rn[0]}
                     fontStyle={{
