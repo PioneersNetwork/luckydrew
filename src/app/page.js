@@ -1,113 +1,169 @@
+"use client";
 import Image from "next/image";
+import { useState } from "react";
+import AnimatedNumbers from "react-animated-numbers";
 
 export default function Home() {
+  const [rn, setRn] = useState();
+  const [winners, setWinners] = useState([]);
+  const [finish,setFinish]=useState(false);
+  const [prizes, setPrizes] = useState([
+    10000, 10000, 10000, 10000, 10000, 5000, 5000, 5000, 5000, 5000, 2000, 2000,
+    2000, 2000,
+  ]);
+  function drew() {
+    let min = 1;
+    let max = 1000;
+    let number = addLeadingZeros(
+      Math.floor(Math.random() * (max - min + 1) + min),
+      4
+    );
+    if(winners.length>=prizes.length-2)
+      {
+        setFinish(true);
+      }
+    if (!winners.find((e) => e.number == number) && !finish) {
+      setRn(number);
+      setWinners((prev) => {
+        prev.push({ number: number, prize: prizes[prev.length] });
+        return [...prev];
+      });
+      
+    } else {
+      drew();
+    }
+  }
+  function addLeadingZeros(number, width) {
+    // Convert the number to a string
+    let numString = number.toString();
+
+    // Calculate the number of leading zeros needed
+    let zerosToAdd = width - numString.length;
+
+    // Add leading zeros
+    for (let i = 0; i < zerosToAdd; i++) {
+      numString = "0" + numString;
+    }
+
+    return numString;
+  }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="w-full bg-white max-h-screen">
+      <img
+        src="/logo.png"
+        className="w-[50%] lg:w-[15%] fixed right-10 top-10"
+      />
+      <img src="/ramadan.png" className="h-screen fixed left-0" />
+      <div className="w-full flex max-h-screen pl-[15%]">
+        <div className="text-center flex flex-wrap items-center z-10 mt-[64px]">
+          <div className="text-red-500 font-bold text-[32px] flex flex-wrap items-start">
+            <h1 className="w-full">
+              الإفطار السنوي لمجموعة الدكتور سليمان الحبيب الطبية - 2024
+            </h1>
+            <h2 className="w-full">
+              The Annual Ramadan Iftar of Dr. Sulaiman Al Habib Medical Group{" "}
+            </h2>
+          </div>
+          <div className="w-full flex mt-[32px]">
+            {winners?.length != 0 && (
+              <div className="w-6/12  mx-auto border-x">
+                <div className="flex gap-[32px] justify-center text-red-700 font-bold">
+                <h1>قائمة الفائزين</h1>
+                <h1>Winner List</h1>
+                </div>
+                <div className="max-h-[65vh] overflow-y-auto p-[16px]">
+                {winners.map((winner, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="flex gap-[32px] mt-[4px] justify-center text-red-500 font-bold"
+                    >
+                      <div className="border-2 w-full p-4">{winner.prize}</div>
+                      <div className="border-2 w-full p-4">{winner.number}</div>
+                    </div>
+                  );
+                })}
+                </div>
+              </div>
+            )}
+           {!finish&& <div className="w-full">
+              <div className="text-center w-full flex justify-center  items-start  gap-[32px] text-[28px] text-red-600">
+                <h3>الجائزة الأولى</h3>
+                <h3>1st Prize</h3>
+              </div>
+              <div className="flex gap-[32px] justify-center w-full text-center mt-[64px] text-[24px] items-center">
+                <h3>قيمة الجائزة</h3>
+                <div className="mx-[16px] rounded border-2 border-red-500 px-[16px] text-[32px] text-red-500 font-bold">
+                  10,000 SAR
+                </div>
+                <h3>Prize Value</h3>
+              </div>
+              <div className="w-full mt-[32px] text-center justify-center">
+                <button
+                  onClick={() => {
+                    drew();
+                  }}
+                  className="bg-gray-200 text-black p-[16px] rounded w-[20%]"
+                >
+                  Drew
+                </button>
+              </div>
+              {rn && (
+                <div className="flex gap-[16px] w-full justify-center mt-[32px]">
+                  <AnimatedNumbers
+                    includeComma
+                    transitions={(index) => ({
+                      type: "just",
+                      duration: index + 1,
+                    })}
+                    animateToNumber={rn[3]}
+                    fontStyle={{
+                      fontSize: 100,
+                      color: "red",
+                    }}
+                  />
+                  <AnimatedNumbers
+                    includeComma
+                    transitions={(index) => ({
+                      type: "just",
+                      duration: index + 2,
+                    })}
+                    animateToNumber={rn[2]}
+                    fontStyle={{
+                      fontSize: 100,
+                      color: "red",
+                    }}
+                  />
+                  <AnimatedNumbers
+                    includeComma
+                    transitions={(index) => ({
+                      type: "just",
+                      duration: index + 3,
+                    })}
+                    animateToNumber={rn[1]}
+                    fontStyle={{
+                      fontSize: 100,
+                      color: "red",
+                    }}
+                  />
+                  <AnimatedNumbers
+                    includeComma
+                    transitions={(index) => ({
+                      type: "just",
+                      duration: index + 4,
+                    })}
+                    animateToNumber={rn[0]}
+                    fontStyle={{
+                      fontSize: 100,
+                      color: "red",
+                    }}
+                  />
+                </div>
+              )}
+            </div>}
+          </div>
         </div>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }
