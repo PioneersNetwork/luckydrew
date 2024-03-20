@@ -45,8 +45,11 @@ export default function Home() {
       behavior: "smooth",
     });
   };
-  function drew() {
-    document.getElementById("theSound").play();
+  function next()
+  {
+    if (winners.length >= prizes.length-1) {
+      setFinish(true);
+    }
     if (rn) {
       setWinners((prev) => {
         prev.unshift({ number: rn, prize: prizes[prev.length] });
@@ -57,7 +60,12 @@ export default function Home() {
       },500)
       
       scrollToRef(winnerDiv);
+      setRn(null);
     }
+  }
+  function drew() {
+    document.getElementById("theSound").play();
+    
 
     let number = addLeadingZeros(
       Math.floor(Math.random() * (max - min + 1) + min),
@@ -139,7 +147,7 @@ export default function Home() {
                       })
                     }}
                       value={p}
-                      type="number"
+                      type="text"
                       className="w-full border p-2"
                     />
                     <div>
@@ -228,7 +236,7 @@ export default function Home() {
                         >
                           <div className="border-2 w-full p-4">
                             {winner.prize}
-                            <small className="text-[10px]">SAR</small>
+                            {typeof winner.prize=='number' &&<small className="text-[10px]">SAR</small>}
                           </div>
                           <div className="border-2 w-full p-4">
                             {winner.number}
@@ -252,23 +260,24 @@ export default function Home() {
                     <h3>:# Prize </h3>
                   </div>
                   <div className="flex gap-[32px] justify-center w-full text-center mt-[64px] text-[24px] items-center">
-                    <h3>قيمة الجائزة</h3>
+                    <h3>الجائزة</h3>
                     <div className="mx-[16px] rounded border-2 border-red-500 px-[16px] text-[32px] text-red-500 font-bold">
                       {prizes[winners.length]?.toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                      <small className="text-[12px]">SAR</small>
+                        
+                      {typeof prizes[winners.length]=="number" &&<small className="text-[12px]">SAR</small>}
                     </div>
-                    <h3>Prize Value</h3>
+                    <h3>Prize</h3>
                   </div>
                   <div className="w-full mt-[32px] text-center justify-center">
-                    <button
+                    {!rn &&<button
                       onClick={() => {
                         drew();
                       }}
                       className="bg-gray-200 text-black p-[16px] rounded w-[20%]"
                     >
-                      السحب | Drew
-                    </button>
+                      السحب | Draw
+                    </button>}
                   </div>
                   {rn && (
                     <div className="flex gap-[16px] w-full justify-center mt-[32px]">
@@ -327,7 +336,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="fixed right-10 bottom-20"><button onClick={()=>{
+        <div className="fixed -right-1 bottom-20">
+          {rn&&<button onClick={()=>{next()}} className="w-[100px] p-2 rounded bg-green-300">Next</button>}
+          <br />
+          <button className="w-[100px] mt-[30vh]" onClick={()=>{
           window.localStorage.clear();
           setShowConfig(true);
           setWinners([]);
