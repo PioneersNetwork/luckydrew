@@ -20,7 +20,7 @@ export default function Home() {
         prev.push({ number: rn, prize: prizes[prev.length] });
         return [...prev];
       });
-      setRn();
+      setRn("0000");
     }
     let min = 1;
     let max = 1000;
