@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -8,6 +8,7 @@ const AnimatedNumbers = dynamic(() => import("react-animated-numbers"), {
 })
 export default function Home() {
   const [rn, setRn] = useState();
+  const winnerDiv = useRef();
   const [winners, setWinners] = useState([]);
   const [min,setMin]=useState(1);
   const [max,setMax]=useState(1000);
@@ -16,15 +17,23 @@ export default function Home() {
     10000, 10000, 10000, 10000, 10000, 5000, 5000, 5000, 5000, 5000, 2000, 2000,
     2000, 2000,2000, 2000,2000, 2000,2000, 2000,2000, 2000,2000, 2000,2000, 2000,2000, 2000,
   ]);
+  const scrollToRef = (ref) => {
+    console.log(ref);
+    ref?.current?.scroll({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
   function drew() {
     document.getElementById('theSound').play();
     if(rn)
     {
       setWinners((prev) => {
-        prev.push({ number: rn, prize: prizes[prev.length] });
+        prev.unshift({ number: rn, prize: prizes[prev.length] });
         return [...prev];
       });
       setRn("0000");
+      scrollToRef(winnerDiv)
     }
     let min = 1;
     let max = 1000;
@@ -85,7 +94,7 @@ export default function Home() {
                 <h1>قائمة الفائزين</h1>
                 <h1>Winner List</h1>
                 </div>
-                <div className="max-h-[65vh] overflow-y-auto p-[16px]">
+                <div ref={winnerDiv} className="max-h-[65vh] overflow-y-auto p-[16px]">
                 {winners.map((winner, index) => {
                   return (
                     <div
@@ -95,7 +104,7 @@ export default function Home() {
                       
                       <div className="border-2 w-full p-4">{winner.prize}<small className="text-[10px]">SAR</small></div>
                       <div className="border-2 w-full p-4">{winner.number}</div>
-                      <div className="mx-auto text-[32px] w-[130px]">{index+1}</div>
+                      <div className="mx-auto text-[32px] w-[130px]">{parseInt(winners.length-index)}</div>
                     </div>
                   );
                 })}
