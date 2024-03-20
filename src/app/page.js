@@ -72,7 +72,7 @@ export default function Home() {
             </h2>
           </div>
           <div className="w-full flex mt-[32px]">
-            {(finish &&winners?.length != 0) && (
+            {(winners?.length != 0) && (
               <div className="w-6/12  mx-auto border-x">
                 <div className="flex gap-[32px] justify-center text-red-700 font-bold">
                 <h1>قائمة الفائزين</h1>
