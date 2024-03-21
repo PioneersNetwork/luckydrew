@@ -68,7 +68,7 @@ export default function Home() {
     
 
     let number = addLeadingZeros(
-      Math.floor(Math.random() * (max - min + 1) + min),
+      Math.floor(Math.random() * (max - min + 1) + min)+1,
       4
     );
     if (winners.length >= prizes.length) {
@@ -207,8 +207,8 @@ export default function Home() {
         />
         <img src="/ramadan.png" className="h-screen fixed left-0" />
         <div className="w-full flex max-h-screen pl-[15%]">
-          <div className="text-center flex flex-wrap items-center z-10 mt-[64px]">
-            <div className="text-red-500 font-bold text-[32px] flex flex-wrap items-start">
+          <div className="text-center flex flex-wrap items-center z-10 mt-[128px]">
+            <div className="text-[#665b3d] font-bold text-[32px] flex flex-wrap items-start">
               <h1 className="w-full">
                 الإفطار السنوي لمجموعة الدكتور سليمان الحبيب الطبية - 2024
               </h1>
@@ -216,8 +216,8 @@ export default function Home() {
                 The Annual Ramadan Iftar of Dr. Sulaiman Al Habib Medical Group{" "}
               </h2>
             </div>
-            <div className="w-full flex mt-[32px]">
-              {winners?.length != 0 && (
+            <div className="w-full flex mt-[16px]">
+              {(winners?.length != 0 && finish) && (
                 <div className="w-6/12  mx-auto border-x">
                   <div className="flex gap-[32px] justify-center text-red-700 font-bold">
                     <h1>قائمة الفائزين</h1>
@@ -253,16 +253,16 @@ export default function Home() {
               )}
               {!finish && (
                 <div className="w-full">
-                  <div className="text-center w-full flex justify-center  items-center  gap-[32px] text-[28px] text-red-600">
-                    <h3>الجائزة رقم:</h3>
+                  <div className="text-center w-full flex justify-center  items-center font-bold  gap-[32px] text-[28px] text-red-600">
+                    <h3>جائزة رقم</h3>
                     <h3 className="border border-red-500 p-2 rounded text-[32px]">
                       {winners?.length + 1}
                     </h3>
-                    <h3>:# Prize </h3>
+                    <h3>Prize No.</h3>
                   </div>
-                  <div className="flex gap-[32px] justify-center w-full text-center mt-[64px] text-[24px] items-center">
+                  <div className="flex gap-[32px] justify-center font-bold w-full text-center mt-[32px] text-[24px] items-center">
                     <h3>الجائزة</h3>
-                    <div className="mx-[16px] rounded border-2 border-red-500 px-[16px] text-[32px] text-red-500 font-bold">
+                    <div style={{backgroundColor:'#ef4444'}} className="mx-[16px] rounded border-2  text-white px-[16px] text-[42px]  font-bold">
                       {prizes[winners.length]?.toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                         
@@ -271,14 +271,14 @@ export default function Home() {
                     <h3>Prize</h3>
                   </div>
                   <div className="w-full mt-[32px] text-center justify-center">
-                    {!rn &&<button
+                    <button
                       onClick={() => {
                         drew();
                       }}
                       className="bg-gray-200 text-black p-[16px] rounded w-[20%]"
                     >
                       السحب | Draw
-                    </button>}
+                    </button>
                   </div>
                   {rn && (
                     <div className="flex gap-[16px] w-full justify-center mt-[32px]">
@@ -338,7 +338,9 @@ export default function Home() {
           </div>
         </div>
         <div className="fixed -right-1 bottom-20">
-          {rn&&<button onClick={()=>{next()}} className="w-[100px] p-2 rounded bg-green-300">Next</button>}
+          {(winners.length>0) && <button onClick={()=>{setFinish(!finish)}} className="w-[100px] p-2 rounded bg-red-300">Winner List</button>}
+          <br />
+          {rn&&<button onClick={()=>{next()}} className="w-[100px] p-2 rounded mt-[20vh] bg-green-300">Next</button>}
           <br />
           <button className="w-[100px] mt-[30vh]" onClick={()=>{
           window.localStorage.clear();
