@@ -20,23 +20,30 @@ export default function Home() {
     2000, 2000, 2000, 2000,
   ]);
   useEffect(() => {
-    if (!window.localStorage.getItem("prizes") || !window.localStorage.getItem('min') || !window.localStorage.getItem('max')) {
+    if (
+      !window.localStorage.getItem("prizes") ||
+      !window.localStorage.getItem("min") ||
+      !window.localStorage.getItem("max")
+    ) {
       setShowConfig(true);
     } else {
       setPrizes(JSON.parse(window.localStorage.getItem("prizes")));
-      setMin(window.localStorage.getItem('min') || 1);
-      setMax(window.localStorage.getItem('max') || 1000);
-      setWinners(JSON.parse(window.localStorage.getItem('winners')) || [])
+      setMin(window.localStorage.getItem("min") || 1);
+      setMax(window.localStorage.getItem("max") || 1000);
+      setWinners(JSON.parse(window.localStorage.getItem("winners")) || []);
       setShowConfig(false);
     }
-    if(window.localStorage.getItem('prizes') && window.localStorage.getItem('winners'))
-    {
-      if(JSON.parse(window.localStorage.getItem('winners')).length >= JSON.parse(window.localStorage.getItem('prizes')).length)
-      {
+    if (
+      window.localStorage.getItem("prizes") &&
+      window.localStorage.getItem("winners")
+    ) {
+      if (
+        JSON.parse(window.localStorage.getItem("winners")).length >=
+        JSON.parse(window.localStorage.getItem("prizes")).length
+      ) {
         setFinish(true);
       }
     }
-    
   }, []);
   const scrollToRef = (ref) => {
     console.log(ref);
@@ -45,30 +52,28 @@ export default function Home() {
       behavior: "smooth",
     });
   };
-  function next()
-  {
-    if (winners.length >= prizes.length-1) {
+  function next() {
+    if (winners.length >= prizes.length - 1) {
       setFinish(true);
     }
     if (rn) {
       setWinners((prev) => {
-        prev.unshift({ number: rn, prize: prizes[prev.length] });
+        prev.push({ number: rn, prize: prizes[prev.length] });
         return [...prev];
       });
-      setTimeout(()=>{
-        window.localStorage.setItem('winners',JSON.stringify(winners))
-      },500)
-      
+      setTimeout(() => {
+        window.localStorage.setItem("winners", JSON.stringify(winners));
+      }, 500);
+
       scrollToRef(winnerDiv);
       setRn(null);
     }
   }
   function drew() {
     document.getElementById("theSound").play();
-    
 
     let number = addLeadingZeros(
-      Math.floor(Math.random() * (max - min + 1) + min)+1,
+      Math.floor(Math.random() * (max - min + 1) + min) + 1,
       4
     );
     if (winners.length >= prizes.length) {
@@ -140,12 +145,12 @@ export default function Home() {
                       {k + 1}
                     </div>
                     <input
-                    onChange={(e)=>{
-                      setPrizes(prev=>{
-                        prev[k]=e.target.value;
-                        return [...prev];
-                      })
-                    }}
+                      onChange={(e) => {
+                        setPrizes((prev) => {
+                          prev[k] = e.target.value;
+                          return [...prev];
+                        });
+                      }}
                       value={p}
                       type="text"
                       className="w-full border p-2"
@@ -183,8 +188,8 @@ export default function Home() {
           <button
             onClick={() => {
               window.localStorage.setItem("prizes", JSON.stringify(prizes));
-              window.localStorage.setItem('min',min);
-              window.localStorage.setItem('max',max);
+              window.localStorage.setItem("min", min);
+              window.localStorage.setItem("max", max);
               setShowConfig(false);
             }}
             className="bg-green-400 p-2 rounded float-end"
@@ -217,36 +222,42 @@ export default function Home() {
               </h2>
             </div>
             <div className="w-full flex mt-[16px]">
-              {(winners?.length != 0 && finish) && (
+              {winners?.length != 0 && finish && (
                 <div className="w-6/12  mx-auto border-x">
                   <div className="flex gap-[32px] justify-center text-red-700 font-bold">
-                    <h1>قائمة الفائزين</h1>
-                    <h1>Winner List</h1>
+                    <div className="flex gap-[32px] mt-[4px] justify-center items-center text-red-500 font-bold">
+                      <div className="w-full p-4 text-center">قائمة الفائزين</div>
+                      <div className="w-full p-4 text-center">Winner List</div>
+
+                      <div className="w-[120px]"> </div>
+                    </div>
                   </div>
                   <div
                     ref={winnerDiv}
                     className="max-h-[65vh] overflow-y-auto p-[16px]"
                   >
                     {winners.map((winner, index) => {
-                      if(winner.prize)
-                      return (
-                        <div
-                          key={index}
-                          className="flex gap-[32px] mt-[4px] justify-center items-center text-red-500 font-bold"
-                        >
-                          <div className="border-2 w-full p-4">
-                            {winner.prize}
-                            
-                            { !!parseInt(winner.prize) &&<small className="text-[10px]">SAR</small>}
+                      if (winner.prize)
+                        return (
+                          <div
+                            key={index}
+                            className="flex gap-[32px] mt-[4px] justify-center items-center text-red-500 font-bold"
+                          >
+                            <div className="border-2 w-full p-4">
+                              {winner.prize}
+
+                              {!!parseInt(winner.prize) && (
+                                <small className="text-[10px]">SAR</small>
+                              )}
+                            </div>
+                            <div className="border-2 w-full p-4">
+                              {winner.number}
+                            </div>
+                            <div className="mx-auto text-[32px] w-[130px]">
+                              {index+1}
+                            </div>
                           </div>
-                          <div className="border-2 w-full p-4">
-                            {winner.number}
-                          </div>
-                          <div className="mx-auto text-[32px] w-[130px]">
-                            {parseInt(winners.length - index)}
-                          </div>
-                        </div>
-                      );
+                        );
                     })}
                   </div>
                 </div>
@@ -258,15 +269,21 @@ export default function Home() {
                     <h3 className="border border-red-500 p-2 rounded text-[32px]">
                       {winners?.length + 1}
                     </h3>
-                    <h3 style={{direction:'ltr'}}>Prize No.</h3>
+                    <h3 style={{ direction: "ltr" }}>Prize No.</h3>
                   </div>
                   <div className="flex gap-[32px] justify-center font-bold w-full text-center mt-[32px] text-[24px] items-center">
                     <h3>الجائزة</h3>
-                    <div style={{backgroundColor:'#ef4444'}} className="mx-[16px] rounded border-2  text-white px-[16px] text-[42px]  font-bold">
-                      {prizes[winners.length]?.toString()
+                    <div
+                      style={{ backgroundColor: "#ef4444" }}
+                      className="mx-[16px] rounded border-2  text-white px-[16px] text-[42px]  font-bold"
+                    >
+                      {prizes[winners.length]
+                        ?.toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                        
-                      {!!parseInt(prizes[winners.length]) &&<small className="text-[12px]">SAR</small>}
+
+                      {!!parseInt(prizes[winners.length]) && (
+                        <small className="text-[12px]">SAR</small>
+                      )}
                     </div>
                     <h3>Prize</h3>
                   </div>
@@ -338,18 +355,51 @@ export default function Home() {
           </div>
         </div>
         <div className="fixed -right-1 bottom-20">
-          {(winners.length>0 && !finish) && <button onClick={()=>{setFinish(!finish)}} className="w-[100px] p-2 rounded bg-red-500 text-white font-bold">Winner List</button>}
-          {(winners.length>0 && finish) && <button onClick={()=>{setFinish(!finish)}} className="w-[100px] p-2 rounded bg-green-500 text-white font-bold">Lucky Draw</button>}
+          {winners.length > 0 && !finish && (
+            <button
+              onClick={() => {
+                setFinish(!finish);
+              }}
+              className="w-[100px] p-2 rounded bg-red-500 text-white font-bold"
+            >
+              Winner List
+            </button>
+          )}
+          {winners.length > 0 && finish && (
+            <button
+              onClick={() => {
+                setFinish(!finish);
+              }}
+              className="w-[100px] p-2 rounded bg-green-500 text-white font-bold"
+            >
+              Lucky Draw
+            </button>
+          )}
           <br />
-          {rn&&<button onClick={()=>{next()}} className="w-[100px] p-2 rounded mt-[1vh] bg-green-300">Next</button>}
+          {rn && (
+            <button
+              onClick={() => {
+                next();
+              }}
+              className="w-[100px] p-2 rounded mt-[1vh] bg-green-300"
+            >
+              Next
+            </button>
+          )}
           <br />
-          <button className="w-[100px] mt-[30vh]" onClick={()=>{
-          window.localStorage.clear();
-          setShowConfig(true);
-          setWinners([]);
-          setFinish(false);
-          setRn(null);
-        }}>Reset</button></div>
+          <button
+            className="w-[100px] mt-[30vh]"
+            onClick={() => {
+              window.localStorage.clear();
+              setShowConfig(true);
+              setWinners([]);
+              setFinish(false);
+              setRn(null);
+            }}
+          >
+            Reset
+          </button>
+        </div>
         <div
           className="fixed bottom-3 w-full left-0 text-center"
           style={{ direction: "ltr" }}
