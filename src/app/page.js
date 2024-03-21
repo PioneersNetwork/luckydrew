@@ -258,7 +258,7 @@ export default function Home() {
                     <h3 className="border border-red-500 p-2 rounded text-[32px]">
                       {winners?.length + 1}
                     </h3>
-                    <h3>Prize No.</h3>
+                    <h3 style={{direction:'ltr'}}>Prize No.</h3>
                   </div>
                   <div className="flex gap-[32px] justify-center font-bold w-full text-center mt-[32px] text-[24px] items-center">
                     <h3>الجائزة</h3>
@@ -338,9 +338,10 @@ export default function Home() {
           </div>
         </div>
         <div className="fixed -right-1 bottom-20">
-          {(winners.length>0) && <button onClick={()=>{setFinish(!finish)}} className="w-[100px] p-2 rounded bg-red-300">Winner List</button>}
+          {(winners.length>0 && !finish) && <button onClick={()=>{setFinish(!finish)}} className="w-[100px] p-2 rounded bg-red-500 text-white font-bold">Winner List</button>}
+          {(winners.length>0 && finish) && <button onClick={()=>{setFinish(!finish)}} className="w-[100px] p-2 rounded bg-green-500 text-white font-bold">Lucky Draw</button>}
           <br />
-          {rn&&<button onClick={()=>{next()}} className="w-[100px] p-2 rounded mt-[20vh] bg-green-300">Next</button>}
+          {rn&&<button onClick={()=>{next()}} className="w-[100px] p-2 rounded mt-[1vh] bg-green-300">Next</button>}
           <br />
           <button className="w-[100px] mt-[30vh]" onClick={()=>{
           window.localStorage.clear();
