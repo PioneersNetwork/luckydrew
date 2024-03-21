@@ -207,7 +207,7 @@ export default function Home() {
         />
         <img src="/ramadan.png" className="h-screen fixed left-0" />
         <div className="w-full flex max-h-screen pl-[15%]">
-          <div className="text-center flex flex-wrap items-center z-10 mt-[128px]">
+          <div className="text-center flex flex-wrap items-center z-10 mt-[96px]">
             <div className="text-[#665b3d] font-bold text-[32px] flex flex-wrap items-start">
               <h1 className="w-full">
                 الإفطار السنوي لمجموعة الدكتور سليمان الحبيب الطبية - 2024
